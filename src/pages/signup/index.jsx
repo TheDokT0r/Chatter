@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import styles from '../../styles/login.module.css';
-import { checkForSignUpErrors } from '../api/checkForSignUpErrors';
 
 export default function index() {
     const [email, setEmail] = useState('');
@@ -10,27 +9,33 @@ export default function index() {
 
     const [errors, setErrors] = useState([]);
 
-    console.log({ email, username, password, confirmPass });
+    // console.log({ email, username, password, confirmPass });
 
     useEffect(() => {
 
     }, [])
 
 
-    const submitClick = () => {
-        setErrors(checkForSignUpErrors({ email, username, password, confirmPass }));
+    const submitClick = async (event) => {
+        event.preventDefault();
+        const userData = { email, username, password, confirmPass };
 
-        //No errors here lol
-        if (errors.length < 1) {
+        const response = await fetch('/api/checkForSignUpErrors', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, username, password, confirmPass })
+        });
 
-        }
+        const json = await response.json();
+        setErrors(json.errors)
     }
+
 
     //Dislays the erros in an html form
     const displayErrorsList = () => {
         let c = 1;
-        return errors.map(item => (
-            <p>*{item}</p>
+        return errors.map((item, index) => (
+            <p key={index}>*{item}</p>
         ));
     }
 
@@ -79,7 +84,7 @@ export default function index() {
                     <button onClick={submitClick}>Submit</button>
                 </div>
 
-                <p>Already have an accout? <a href='/login'>Log in!</a></p>
+                <p>Already have an account? <a href='/login'>Log in!</a></p>
 
                 {/* Errors List (displays only if the errors state length > 0*/}
                 <div>

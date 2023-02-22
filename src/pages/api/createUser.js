@@ -1,5 +1,5 @@
-export function createUser(userData) {
-    const { email, username, password } = userData;
+export function createUser(req, res) {
+    const { email, username, password } = req.body;
 
     
 }
