@@ -32,6 +32,10 @@ export default function index(props) {
             return;
         }
 
+        if(props.currentTime < linesDurationSeconds[0]) {
+            setDisplayedLyrics([]);
+        }
+
         for (let i = 0; i < linesDurationSeconds.length; i++) {
             if (props.currentTime >= linesDurationSeconds[i] && !displayedLyrics.includes(lyrics[i])) {
                 let temp = [...displayedLyrics];

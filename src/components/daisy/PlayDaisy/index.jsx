@@ -58,12 +58,17 @@ export default function PlayDaisy(props) {
         <input
           type="range"
           min="0"
-          max={audioRef.current && audioRef.current.duration ? audioRef.current.duration : 0}
+          max={audioRef.current?.duration || 0}
           step="0.01"
           value={currentTime}
           onChange={handleTimeChange}
         />
-        <label>{formatTime(currentTime)}/{audioRef.current && audioRef.current.duration ? formatTime(audioRef.current.duration) : '--:--'}</label>
+        <label>
+          {formatTime(currentTime)}/
+          {audioRef.current?.duration
+            ? formatTime(audioRef.current.duration)
+            : '--:--'}
+        </label>
         <button onClick={handlePlayButtonClick}>Play</button>
         <button onClick={handlePauseButtonClick}>Pause</button>
       </div>
