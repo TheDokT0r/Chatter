@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import PlayDaisy from '@/components/PlayDaisy';
+import PlayDaisy from '@/components/daisy/PlayDaisy';
+import DaisyLyrics from '@/components/daisy/DaisyLyrics';
 
 export default function index() {
   const [lyrics, setLyrics] = useState([]);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     const getLyrics = async () => {
@@ -26,9 +29,8 @@ export default function index() {
 
   return (
     <div>
-      {lyrics}
-
-      <PlayDaisy />
+      <DaisyLyrics isPlaying={isPlaying} currentTime={currentTime}/>
+      <PlayDaisy setCurrentTime={setCurrentTime} setIsPlaying={setIsPlaying}/>
     </div>
   );
 }
