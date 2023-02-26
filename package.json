@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@next/font": "13.1.6",
     "dotenv": "^16.0.3",
     "eslint": "8.34.0",

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from '../../styles/login.module.css';
+import {createAccount, checkForErrors} from '../../components/CreateNewUser';
 
 export default function index() {
     const [email, setEmail] = useState('');
@@ -20,14 +21,16 @@ export default function index() {
         event.preventDefault();
         const userData = { email, username, password, confirmPass };
 
-        const response = await fetch('/api/checkForSignUpErrors', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, username, password, confirmPass })
-        });
+        setErrors(await checkForErrors(userData));
 
-        const json = await response.json();
-        setErrors(json.errors)
+
+        //Wouldn't submit if there are errors
+        if(errors.length > 0) {
+            return;
+        }
+
+
+        await createAccount(userData);
     }
 
 
@@ -39,6 +42,20 @@ export default function index() {
         ));
     }
 
+    //TODO: Delete later. Only for debuging
+    const getRandomUserData = () => {
+        const response = fetch('/api/getRandomUserData');
+        response.then((res) => {
+            res.json().then((data) => {
+                console.log(data);
+                setEmail(data.email);
+                setUsername(data.username);
+                setPassword(data.password);
+                setConfirmPass(data.password);
+            })
+        })
+    }
+
     return (
         <div>
             <h1>Sign up</h1>
@@ -46,6 +63,7 @@ export default function index() {
             <div>
                 <div>
                     <input
+                        value={email}
                         className={styles.inputTxt}
                         type='email'
                         placeholder='Email'
@@ -55,6 +73,7 @@ export default function index() {
 
                 <div>
                     <input
+                        value={username}
                         className={styles.inputTxt}
                         type='text'
                         placeholder='Username'
@@ -64,6 +83,7 @@ export default function index() {
 
                 <div>
                     <input
+                        value={password}
                         className={styles.inputTxt}
                         type='password'
                         placeholder='Password'
@@ -73,6 +93,7 @@ export default function index() {
 
                 <div>
                     <input
+                        value={confirmPass}
                         className={styles.inputTxt}
                         type='password'
                         placeholder='Confirm Password'
@@ -83,6 +104,8 @@ export default function index() {
                 <div>
                     <button onClick={submitClick}>Submit</button>
                 </div>
+
+                <button onClick={getRandomUserData}>DEBUG</button>
 
                 <p>Already have an account? <a href='/login'>Log in!</a></p>
 
